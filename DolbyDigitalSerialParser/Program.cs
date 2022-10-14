@@ -66,18 +66,27 @@ namespace DolbyDigitalSerialParser
                         if (readOutstanding)
                         {
 
-                            if(blockBit == true) // start new block
+                            readOutstanding = false;
+
+                            //if(blockBit == true) // start new block
+                            if (lastBlockBit == true) // start new block
                             {
                                 blockIndex = 0;
                                 blockIndexKnown = true;
                                 byte[] dataBlock = BitConverter.GetBytes(currentBlock);
-                                Array.Reverse(dataBlock);
+                                //Array.Reverse(dataBlock);
                                 output.AddRange(dataBlock);
                                 currentBlock = 0;
                             } else
                             {
+                                //if(blockBit == true)
+                                //{
+                                 //   blockIndex = -1;
+                                //    blockIndexKnown = true;
+                                //} else
                                 if (!blockIndexKnown)
                                 {
+                                    lastBlockBit = blockBit;
                                     continue;
                                 }
                                 blockIndex++;
@@ -93,10 +102,11 @@ namespace DolbyDigitalSerialParser
 
                             }
 
-                            readOutstanding = false;
-                        } 
-                        
+                            //readOutstanding = false;
+                            lastBlockBit = blockBit;
+                        }
 
+                        
                         lastClockBit = clockBit;
                     }
                 }
